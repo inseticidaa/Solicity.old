@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Infra.Persistence.EFCore.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 using Solicity.Domain.Entities;
+using Solicity.Domain.Interfaces;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Ports.Repositories;
 using System;
@@ -14,7 +16,14 @@ namespace Infra.Persistence.EFCore
     {
         public static void AddPersistenceModule(this IServiceCollection services)
         {
-            services.AddTransient<IUserRepository, IUserRepository>();
+            services.AddDbContext<PersistenceContext>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(EfRepository<>));
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITeamRepository, TeamRepository>();
+            services.AddTransient<ICardRepository, CardRepository>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
     }
 }

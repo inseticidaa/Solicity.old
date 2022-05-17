@@ -1,17 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Solicity.Domain.Entities;
 
 namespace Infra.Persistence.EFCore
 {
-    public class PersistenceContext: DbContext
+    public class PersistenceContext : DbContext
     {
-        public PersistenceContext()
-        {
+        private readonly IConfiguration _configuration;
+        public DbSet<User> Users { get; set; }
 
+        public PersistenceContext(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
         }
     }
 }

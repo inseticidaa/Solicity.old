@@ -13,4 +13,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Infra.Persistence.EFCore\Infra.Persistence.EFCore.csproj" />
+    <ProjectReference Include="..\Solicity.Application\Solicity.Application.csproj" />
+    <ProjectReference Include="..\Solicity.Domain\Solicity.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

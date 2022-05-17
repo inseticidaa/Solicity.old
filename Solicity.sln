@@ -11,13 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driving", "Driving", "{B62F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driven", "Driven", "{44675851-8D45-49F7-845A-0360D385580E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra.Persistence.EFCore", "Infra.Persistence.EFCore\Infra.Persistence.EFCore.csproj", "{48208B30-9ABE-4B18-8B17-AB00FE815DD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.Persistence.EFCore", "Infra.Persistence.EFCore\Infra.Persistence.EFCore.csproj", "{48208B30-9ABE-4B18-8B17-AB00FE815DD2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{227BC2D0-DE2B-4CDC-97D6-B114D8EAF6FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solicity.Application", "Solicity.Application\Solicity.Application.csproj", "{8035EAD4-8815-48C7-99B3-259A4533F49A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solicity.Application", "Solicity.Application\Solicity.Application.csproj", "{8035EAD4-8815-48C7-99B3-259A4533F49A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solicity.Api", "Solicity.Api\Solicity.Api.csproj", "{4AC657B8-C596-4646-B5A4-8CFA6CAACF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solicity.Api", "Solicity.Api\Solicity.Api.csproj", "{4AC657B8-C596-4646-B5A4-8CFA6CAACF59}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Solicity.Database", "Solicity.Database\Solicity.Database.sqlproj", "{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,12 @@ Global
 		{4AC657B8-C596-4646-B5A4-8CFA6CAACF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AC657B8-C596-4646-B5A4-8CFA6CAACF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AC657B8-C596-4646-B5A4-8CFA6CAACF59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5436BD35-CEE3-45AB-88FC-4AF1BFEC484F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
