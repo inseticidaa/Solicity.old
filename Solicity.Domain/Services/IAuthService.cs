@@ -1,4 +1,5 @@
-﻿using Solicity.Domain.Entities;
+﻿using Solicity.Domain.DTOs;
+using Solicity.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Solicity.Domain.Services
 {
     public interface IAuthService
     {
-        Task<User> Authenticate(string email, string password);
+        Task<TokenDTO> Login(string email, string password);
+        Task<TokenDTO> Register(User newUser);
     }
 }

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Table\TB_USERS.sql" />
+    <Build Include="Table\TB_TEAMS.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Solicity.Database.refactorlog" />

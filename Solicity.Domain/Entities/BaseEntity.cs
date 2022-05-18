@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Solicity.Domain.Entities
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]

@@ -10,5 +10,6 @@ namespace Solicity.Domain.Ports.Repositories
 {
     public interface ITeamRepository: IGenericRepository<Team>
     {
+        Task<Team> GetByName(string name);
     }
 }

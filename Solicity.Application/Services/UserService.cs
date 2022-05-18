@@ -19,13 +19,13 @@ namespace Solicity.Application.Services
 
         #region [Methods]
 
-        public async Task<User> RegisterUser(User newUser)
+        public async Task<User> Create(User newUser)
         {
             try
             {
-                var exits = await _unitOfWork.Users.CountWhere(u => u.Email == newUser.Email);
+                var count = await _unitOfWork.Users.CountWhere(u => u.Email == newUser.Email);
 
-                if (exits > 0)
+                if (count > 0)
                 {
                     throw new Exception("User already registered");
                 }
@@ -34,10 +34,9 @@ namespace Solicity.Application.Services
                 var user = await _unitOfWork.Users.GetByEmail(newUser.Email);
 
                 if (user == null) return null;
-                
+
                 return user;
             }
-
             catch (Exception)
             {
                 throw;

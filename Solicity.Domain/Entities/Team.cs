@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Solicity.Domain.Entities
 {
+    [Table("TB_TEAMS")]
     public class Team : BaseEntity
     {
         #region [Props]
@@ -12,6 +14,16 @@ namespace Solicity.Domain.Entities
 
         [MaxLength(256)]
         public string? Description { get; set; }
+
+        [Required]
+        public int AuthorId { get; set; }
+
+        [ForeignKey("AuthorId")]
+        public virtual User Author { get; set; }
+
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public bool Enabled { get; set; }
 
         #endregion [Props]
     }
