@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Solicity.Domain.DTOs;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
+using Solicity.Domain.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +30,14 @@ namespace Solicity.Application.Services
 
         #region [Methods}
 
-        public async Task<TeamDTO> Create(Team newTeam)
+        public async Task Create(Team newTeam, int userId)
         {
             try
             {
+                var validador = new TeamValidator();
+
+                validador.ValidateAndThrow(newTeam);
+
                 var count = await _unitOfWork.Teams.CountWhere(t => t.Name == newTeam.Name);
 
                 if (count > 0)
@@ -42,7 +48,16 @@ namespace Solicity.Application.Services
                 await _unitOfWork.Teams.Add(newTeam);
                 var team = await _unitOfWork.Teams.GetByName(newTeam.Name);
 
-                return (TeamDTO)team;
+                var tm = new TeamMember
+                {
+                    TeamId = team.Id,
+                    UserId = userId,
+                    IsOwner = true,
+                };
+
+                await _unitOfWork.TeamMembers.Add(tm);
+
+                return;
             }
             catch (Exception)
             {

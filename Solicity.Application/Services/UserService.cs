@@ -1,6 +1,8 @@
-﻿using Solicity.Domain.Entities;
+﻿using FluentValidation;
+using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
+using Solicity.Domain.Validators;
 
 namespace Solicity.Application.Services
 {
@@ -23,6 +25,9 @@ namespace Solicity.Application.Services
         {
             try
             {
+                var validator = new UserValidator();
+                validator.ValidateAndThrow(newUser);
+
                 var count = await _unitOfWork.Users.CountWhere(u => u.Email == newUser.Email);
 
                 if (count > 0)

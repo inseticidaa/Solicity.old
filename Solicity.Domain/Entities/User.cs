@@ -27,12 +27,10 @@ namespace Solicity.Domain.Entities
         public string Hash { get; set; }
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public bool IsAdmin { get; set; }
+        public bool IsAdmin { get; set; } = false;
 
         public string Password
         {
@@ -43,7 +41,7 @@ namespace Solicity.Domain.Entities
         }
 
         [JsonIgnore]
-        public string Name
+        public string FullName
         {
             get
             {

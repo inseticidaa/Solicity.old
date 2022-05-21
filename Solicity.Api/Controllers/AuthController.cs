@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Solicity.Api.Models.Auth;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Services;
-using System.Net.Mime;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,9 +26,6 @@ namespace Solicity.Api.Controllers
         #region Methods
 
         [HttpPost("Login")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
@@ -52,15 +48,11 @@ namespace Solicity.Api.Controllers
         }
 
         [HttpPost("Register")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             try
             {
-
                 if (ModelState.IsValid)
                 {
                     var newUser = new User
@@ -79,7 +71,6 @@ namespace Solicity.Api.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                
             }
             catch (Exception ex)
             {

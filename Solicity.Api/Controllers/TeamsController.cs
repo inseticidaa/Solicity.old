@@ -20,9 +20,6 @@ namespace Solicity.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize("Admin")]
         public async Task<IActionResult> Post([FromBody] CreateTeamRequest model)
         {
@@ -38,25 +35,17 @@ namespace Solicity.Api.Controllers
                 var newTeam = new Team
                 {
                     Name = model.Name,
-                    Description = model.Description,
-                    AuthorId = int.Parse(idClaim.Value),
+                    Description = model.Description
                 };
 
-                var team = await _teamService.Create(newTeam);
+                await _teamService.Create(newTeam, int.Parse(idClaim.Value));
 
-                return CreatedAtAction(nameof(Get), new { Id = team.Id }, team);
+                return StatusCode(StatusCodes.Status201Created);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { Message = ex.Message });
             }
-        }
-
-        [HttpGet("{id}")]
-        [Authorize("User")]
-        public string Get(int id)
-        {
-            return "value";
         }
     }
 }

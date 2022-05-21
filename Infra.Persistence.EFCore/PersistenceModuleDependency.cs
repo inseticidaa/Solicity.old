@@ -22,6 +22,7 @@ namespace Infra.Persistence.EFCore
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITeamRepository, TeamRepository>();
             services.AddTransient<ICardRepository, CardRepository>();
+            services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }

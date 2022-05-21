@@ -12,15 +12,18 @@ namespace Infra.Persistence.EFCore
     {
         public UnitOfWork(IUserRepository users,
             ICardRepository cards,
-            ITeamRepository teams)
+            ITeamRepository teams,
+            ITeamMemberRepository teamMembers)
         {
             Users = users;
             Cards = cards;
             Teams = teams;
+            TeamMembers = teamMembers;
         }
 
         public IUserRepository Users { get; set; }
         public ICardRepository Cards { get; set; }
         public ITeamRepository Teams { get; set; }
+        public ITeamMemberRepository TeamMembers { get; set; }
     }
 }

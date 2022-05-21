@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enums\" />
+    <PackageReference Include="FluentValidation" Version="11.0.1" />
   </ItemGroup>
 
 </Project>

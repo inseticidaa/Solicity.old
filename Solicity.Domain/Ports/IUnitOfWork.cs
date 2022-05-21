@@ -13,5 +13,6 @@ namespace Solicity.Domain.Ports
         IUserRepository Users { get; set; }
         ICardRepository Cards { get; set; }
         ITeamRepository Teams { get; set; }
+        ITeamMemberRepository TeamMembers { get; set; }
     }
 }

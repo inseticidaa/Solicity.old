@@ -77,7 +77,7 @@ namespace Solicity.Application.Services
                 Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
                 {
                     new Claim("Id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Name, user.FullName),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User"),
                 }),

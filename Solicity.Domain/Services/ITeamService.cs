@@ -10,6 +10,6 @@ namespace Solicity.Domain.Services
 {
     public interface ITeamService
     {
-        Task<TeamDTO> Create(Team newTeam);
+        Task Create(Team newTeam, int userId);
     }
 }

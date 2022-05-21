@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Solicity.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Solicity.Domain.Entities
@@ -16,14 +17,12 @@ namespace Solicity.Domain.Entities
         public string? Description { get; set; }
 
         [Required]
-        public int AuthorId { get; set; }
-
-        [ForeignKey("AuthorId")]
-        public virtual User Author { get; set; }
+        public bool Enabled { get; set; } = true;
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public bool Enabled { get; set; }
+        public VisibilityEnum Visibility { get; set; }
+
+        public virtual ICollection<TeamMember> Members { get; set; }
 
         #endregion [Props]
     }

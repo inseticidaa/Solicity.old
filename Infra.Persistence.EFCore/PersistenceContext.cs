@@ -9,6 +9,7 @@ namespace Infra.Persistence.EFCore
         private readonly IConfiguration _configuration;
         public DbSet<User> Users { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamMember> teamMembers { get; set; }
 
         public PersistenceContext(IConfiguration configuration)
         {
@@ -22,11 +23,13 @@ namespace Infra.Persistence.EFCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Team>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.Author).WithOne().HasForeignKey<Team>(e => e.AuthorId);
-            });
+            modelBuilder.Entity<TeamMember>()
+                .HasOne(tm => tm.Team)
+                .WithMany(t => t.Members);
+
+            modelBuilder.Entity<TeamMember>()
+                .HasOne(tm => tm.User)
+                .WithOne();
         }
     }
 }
