@@ -1,15 +1,11 @@
-﻿using Solicity.Domain.DTOs;
-using Solicity.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Solicity.Domain.Entities;
 
 namespace Solicity.Domain.Services
 {
     public interface ITeamService
     {
-        Task Create(Team newTeam, int userId);
+        Task<int> Create(Team newTeam, int requesterId);
+        Task AddMember(int teamId, int userId, int requesterId);
+        Task<ICollection<TeamMember>> GetMembers(int teamId);
     }
 }

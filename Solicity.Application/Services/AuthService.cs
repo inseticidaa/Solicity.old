@@ -69,7 +69,6 @@ namespace Solicity.Application.Services
 
         public TokenDTO GenerateToken(User user)
         {
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]);
             var tokenDescriptor = new SecurityTokenDescriptor

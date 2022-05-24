@@ -20,16 +20,5 @@ namespace Infra.Persistence.EFCore
         {
             optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<TeamMember>()
-                .HasOne(tm => tm.Team)
-                .WithMany(t => t.Members);
-
-            modelBuilder.Entity<TeamMember>()
-                .HasOne(tm => tm.User)
-                .WithOne();
-        }
     }
 }

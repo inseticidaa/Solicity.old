@@ -1,4 +1,5 @@
 ﻿using Solicity.Domain.Enums;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,7 +23,7 @@ namespace Solicity.Domain.Entities
         [Required]
         public VisibilityEnum Visibility { get; set; }
 
-        public virtual ICollection<TeamMember> Members { get; set; }
+        public virtual ICollection<TeamMember> Members { get; set; } = new Collection<TeamMember>();
 
         #endregion [Props]
     }
