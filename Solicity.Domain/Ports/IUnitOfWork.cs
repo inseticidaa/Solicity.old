@@ -7,5 +7,11 @@ namespace Solicity.Domain.Ports
         IUserRepository Users { get; set; }
         ITeamRepository Teams { get; set; }
         ITeamMemberRepository TeamMembers { get; set; }
+        IRequestRepository Requests { get; set; }
+        IRequestTypeRepository RequestTypes { get; set; }
+
+        void BeginTransaction();
+        void Commit();
+        void Rollback();
     }
 }

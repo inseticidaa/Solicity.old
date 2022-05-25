@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Solicity.Domain.DTOs;
+using Solicity.Domain.DTOs.Auth;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
@@ -27,46 +28,6 @@ namespace Solicity.Application.Services
 
         #region [Methods]
 
-        public async Task<TokenDTO> Login(string email, string password)
-        {
-            try
-            {
-                var user = await _unitOfWork.Users.GetByEmail(email);
-
-                if (user == null) throw new Exception("User not exists");
-
-                if (!user.CheckPassword(password)) throw new Exception("Unauthorized");
-
-                return GenerateToken(user);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<TokenDTO> Register(User newUser)
-        {
-            try
-            {
-                var exits = await _unitOfWork.Users.CountWhere(u => u.Email == newUser.Email);
-
-                if (exits > 0)
-                {
-                    throw new Exception("User already registered");
-                }
-
-                await _unitOfWork.Users.Add(newUser);
-                var user = await _unitOfWork.Users.GetByEmail(newUser.Email);
-
-                return GenerateToken(user);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public TokenDTO GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -89,6 +50,54 @@ namespace Solicity.Application.Services
             _token.Token = tokenHandler.WriteToken(token);
 
             return _token;
+        }
+
+        public async Task<TokenDTO> Login(LoginDTO loginDTO)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetByEmailAsync(loginDTO.Email);
+
+                if (user == null) throw new Exception("User not exists");
+
+                if (!user.CheckPassword(loginDTO.Password)) throw new Exception("Unauthorized");
+
+                return GenerateToken(user);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<TokenDTO> Register(RegisterDTO registerDTO)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetByEmailAsync(registerDTO.Email);
+                if (user != null) throw new Exception("User already registered");
+
+                var newUser = new User
+                {
+                    FirstName = registerDTO.FirstName,
+                    LastName = registerDTO.LastName,
+                    Email = registerDTO.Email,
+                    Password = registerDTO.Password,
+                    Enabled = true,
+                    IsAdmin = false,
+                    CreatedAt = DateTime.Now,
+                    UdpatedAt = DateTime.Now,
+                };
+
+                var user_id = await _unitOfWork.Users.AddAsync(newUser);
+                var _user = await _unitOfWork.Users.GetByIdAsync(user_id);
+
+                return GenerateToken(_user);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #endregion [Methods]

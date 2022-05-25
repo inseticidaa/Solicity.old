@@ -1,9 +1,10 @@
-﻿using Solicity.Domain.Entities;
+﻿using Solicity.Domain.DTOs.User;
+using Solicity.Domain.Entities;
 
 namespace Solicity.Domain.Services
 {
     public interface IUserService
     {
-        Task<User> Create(User newUser);
+        Task<IEnumerable<UserDTO>> GetAllAsync(int page, int pageSize, int userId);
     }
 }

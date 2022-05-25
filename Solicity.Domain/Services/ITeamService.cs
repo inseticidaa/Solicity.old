@@ -1,11 +1,16 @@
-﻿using Solicity.Domain.Entities;
+﻿using Solicity.Domain.DTOs.Team;
+using Solicity.Domain.DTOs.User;
 
 namespace Solicity.Domain.Services
 {
     public interface ITeamService
     {
-        Task<int> Create(Team newTeam, int requesterId);
-        Task AddMember(int teamId, int userId, int requesterId);
-        Task<ICollection<TeamMember>> GetMembers(int teamId);
+        Task<IEnumerable<TeamDTO>> GetAllAsync(int page, int pageSize, int userId);
+        Task<int> Create(NewTeamDTO newTeamDTO, int userId);
+        Task Edit(int teamId, EditTeamDTO editTeamDTO, int userId);
+        Task Delete(int teamId, int userId);
+        Task<TeamDTO> Find(int teamId, int userId);
+        Task<IEnumerable<UserDTO>> GetMembers(int teamId, int userId);
+        Task AddMember(AddMemberDTO addMemberDTO, int userId);
     }
 }

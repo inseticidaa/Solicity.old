@@ -1,12 +1,13 @@
-﻿using Solicity.Domain.Entities;
+﻿using Solicity.Domain.DTOs.User;
+using Solicity.Domain.Entities;
 
-namespace Solicity.Domain.DTOs
+namespace Solicity.Domain.DTOs.Auth
 {
     public class TokenDTO : UserDTO
     {
         public string Token { get; set; }
 
-        public static implicit operator TokenDTO(User user)
+        public static implicit operator TokenDTO(Entities.User user)
         {
             return new TokenDTO
             {

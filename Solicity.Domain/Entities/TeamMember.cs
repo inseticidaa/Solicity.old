@@ -2,7 +2,6 @@
 
 namespace Solicity.Domain.Entities
 {
-    [Table("TB_TEAMS_MEMBERS")]
     public class TeamMember : BaseEntity
     {
         public int UserId { get; set; }

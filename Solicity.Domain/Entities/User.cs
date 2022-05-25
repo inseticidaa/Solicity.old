@@ -4,22 +4,14 @@ using System.Text.Json.Serialization;
 
 namespace Solicity.Domain.Entities
 {
-    [Table("TB_USERS")]
     public class User : BaseEntity
     {
-
-        [EmailAddress]
-        [Required]
         public string Email { get; set; }
-
-        [Required]
         public bool Enabled { get; set; } = true;
-
-        [MaxLength(50)]
-        [Required]
         public string FirstName { get; set; }
-
-        [JsonIgnore]
+        public string Hash { get; set; }
+        public bool IsAdmin { get; set; } = false;
+        public string LastName { get; set; }
         public string FullName
         {
             get
@@ -27,19 +19,6 @@ namespace Solicity.Domain.Entities
                 return FirstName + " " + LastName;
             }
         }
-
-        [Required]
-        [MinLength(8)]
-        [JsonIgnore]
-        public string Hash { get; set; }
-
-        [Required]
-        public bool IsAdmin { get; set; } = false;
-
-        [MaxLength(50)]
-        [Required]
-        public string LastName { get; set; }
-
         public string Password
         {
             set

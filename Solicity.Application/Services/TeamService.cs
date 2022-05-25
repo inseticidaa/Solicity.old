@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
+using Solicity.Domain.DTOs.Team;
+using Solicity.Domain.DTOs.User;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
@@ -9,10 +11,8 @@ namespace Solicity.Application.Services
 {
     public class TeamService : ITeamService
     {
-        #region [Props]
-
-        private IUnitOfWork _unitOfWork;
         private IConfiguration _configuration;
+        private IUnitOfWork _unitOfWork;
 
         public TeamService(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
@@ -20,31 +20,111 @@ namespace Solicity.Application.Services
             _configuration = configuration;
         }
 
-        #endregion [Props]
-
-        #region [Methods}
-
-        public async Task<int> Create(Team newTeam, int requesterId)
+        public async Task AddMember(AddMemberDTO addMemberDTO, int userId)
         {
             try
             {
+                var team = await _unitOfWork.Teams.GetByIdAsync(addMemberDTO.TeamId);
+                if (team == null) throw new Exception("This team doesn't exist");
+
+                var requesterIsMember = await _unitOfWork.TeamMembers.IsMember(team.Id, userId);
+                if (requesterIsMember == null) throw new Exception("You are not a member of the group");
+
+                var user = await _unitOfWork.Users.GetByIdAsync(addMemberDTO.UserId);
+                if (user == null) throw new Exception("This user does not exist");
+
+                var IsMember = await _unitOfWork.TeamMembers.IsMember(team.Id, addMemberDTO.UserId);
+                if (IsMember != null) throw new Exception("This user is already a team member");
+
+                var newTeamMember = new TeamMember
+                {
+                    TeamId = team.Id,
+                    UserId = user.Id,
+                };
+
+                await _unitOfWork.TeamMembers.AddAsync(newTeamMember);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> AddRequest(Request request)
+        {
+            try
+            {
+                var validator = new RequestValidator();
+                await validator.ValidateAndThrowAsync(request);
+
+                var requestType = await _unitOfWork.RequestTypes.GetByIdAsync(request.RequestTypeId);
+                if (requestType == null) throw new Exception("This Request Type doesn't exist");
+                if (!requestType.Enabled) throw new Exception("This Request Type not enabled");
+
+                var team = await _unitOfWork.Teams.GetByIdAsync(request.TeamId);
+                if (team == null) throw new Exception("This Team doesn't exist");
+                if (!team.Enabled) throw new Exception("This Team not enabled");
+
+                var user = await _unitOfWork.Users.GetByIdAsync(request.AuthorId);
+                if (user == null) throw new Exception("This User does not exist");
+                if (!user.Enabled) throw new Exception("This User not enabled");
+
+                var newRequest = new Request
+                {
+                    AuthorId = request.AuthorId,
+                    TeamId = request.TeamId,
+                    RequestType = requestType,
+                    Title = request.Title,
+                    Description = request.Description,
+                };
+
+                var request_id = await _unitOfWork.Requests.AddAsync(newRequest);
+
+                return request_id;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> Create(NewTeamDTO newTeamDTO, int userId)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetByIdAsync(userId);
+
+                if (user is null) throw new Exception("This User does not exist");
+                if (!user.Enabled) throw new Exception("This User not enabled");
+                if (!user.IsAdmin) throw new Exception("This User Unauthorized");
+
+                var team = await _unitOfWork.Teams.GetByName(newTeamDTO.Name);
+                if (team is not null) throw new Exception("A team with the same name has already been created");
+
+                var _team = new Team
+                {
+                    Name = newTeamDTO.Name,
+                    Description = newTeamDTO.Description,
+                    Public = newTeamDTO.Public,
+                    Enabled = true,
+                    CreatedAt = DateTime.Now,
+                    UdpatedAt = DateTime.Now,
+                };
+
                 var validador = new TeamValidator();
+                await validador.ValidateAndThrowAsync(_team);
 
-                validador.ValidateAndThrow(newTeam);
+                var teamId = await _unitOfWork.Teams.AddAsync(_team);
 
-                var count = await _unitOfWork.Teams.CountWhere(t => t.Name == newTeam.Name);
-
-                if (count > 0)
+                var tm = new TeamMember
                 {
-                    throw new Exception("There is already a team with that name");
-                }
+                    TeamId = teamId,
+                    UserId = user.Id,
+                    CreatedAt = DateTime.Now,
+                    UdpatedAt = DateTime.Now,
+                };
 
-                newTeam.Members.Add(new TeamMember
-                {
-                    UserId = requesterId,
-                });
-
-                var teamId = await _unitOfWork.Teams.Add(newTeam);
+                await _unitOfWork.TeamMembers.AddAsync(tm);
 
                 return teamId;
             }
@@ -54,33 +134,23 @@ namespace Solicity.Application.Services
             }
         }
 
-        public async Task AddMember(int teamId, int userId, int requesterId)
+        public async Task Delete(int teamId, int userId)
         {
             try
             {
-                var team = await _unitOfWork.Teams.GetById(teamId);
-                if (team == null) throw new Exception("This team doesn't exist");
+                var user = await _unitOfWork.Users.GetByIdAsync(userId);
 
-                if (!team.Members.Where(t => t.UserId == requesterId).Any())
-                {
-                    throw new Exception("You are not a member of the group");
-                }
+                if (user is null) throw new Exception("This User does not exist");
+                if (!user.Enabled) throw new Exception("This User not enabled");
+                if (!user.IsAdmin) throw new Exception("This User Unauthorized");
 
-                var user = await _unitOfWork.Users.GetById(userId);
-                if (user == null) throw new Exception("This user does not exist");
+                var team = await _unitOfWork.Teams.GetByIdAsync(teamId);
+                if (team == null) throw new Exception("This Team doesn't exist");
+                if (!team.Enabled) throw new Exception("This Team not enabled");
 
-                if (team.Members.Where(t => t.UserId == userId).Any())
-                {
-                    throw new Exception("This user is already a team member");
-                }
+                await _unitOfWork.Teams.RemoveAsync(team);
 
-                team.Members.Add(new TeamMember
-                {
-                    TeamId = team.Id,
-                    UserId = user.Id
-                });
-
-                await _unitOfWork.Teams.Update(team);
+                return;
             }
             catch (Exception)
             {
@@ -88,12 +158,24 @@ namespace Solicity.Application.Services
             }
         }
 
-        public async Task<ICollection<TeamMember>> GetMembers(int teamId)
+        public async Task Edit(int teamId, EditTeamDTO team, int userId)
         {
             try
             {
-                var results = await _unitOfWork.TeamMembers.GetWhere(tm => tm.TeamId == teamId);
-                return results.ToList();
+                var _team = await _unitOfWork.Teams.GetByIdAsync(teamId);
+                if (_team == null) throw new Exception("This Team doesn't exist");
+
+                var isMember = await _unitOfWork.TeamMembers.IsMember(_team.Id, userId);
+                if (isMember) throw new Exception("You are not a member of the group");
+
+                _team.Name = team.Name;
+                _team.Description = team.Description;
+                _team.Enabled = team.Enabled;
+                _team.Public = team.Public;
+
+                await _unitOfWork.Teams.UpdateAsync(_team);
+
+                return;
             }
             catch (Exception)
             {
@@ -101,6 +183,64 @@ namespace Solicity.Application.Services
             }
         }
 
-        #endregion [Methods}
+        public async Task<TeamDTO> Find(int teamId, int userId)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetByIdAsync(userId);
+                if (user == null) throw new Exception("This User does not exist");
+                if (!user.Enabled) throw new Exception("This User not enabled");
+
+                var team = await _unitOfWork.Teams.GetByIdAsync(teamId);
+                if (team == null) throw new Exception("This Team doesn't exist");
+
+                if (team.Public)
+                {
+                    var isMember = await _unitOfWork.TeamMembers.IsMember(team.Id, userId);
+                    if (isMember) throw new Exception("This team is private");
+                }
+
+                return (TeamDTO)team;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<TeamDTO>> GetAllAsync(int page, int pageSize, int userId)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetByIdAsync(userId);
+                if (user == null) throw new Exception("This User does not exist");
+                if (!user.Enabled) throw new Exception("This User not enabled");
+
+                var teams = await _unitOfWork.Teams.GetAllVisibleAsync(page, pageSize, user.Id);
+
+                return teams.Select(x => (TeamDTO)x);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<UserDTO>> GetMembers(int teamId, int userId)
+        {
+            try
+            {
+                var team = await _unitOfWork.Teams.GetByIdAsync(teamId);
+                if (team == null) throw new Exception("This Team doesn't exist");
+
+                var teamMembers = await _unitOfWork.TeamMembers.GetMembersAsync(teamId);
+
+                return teamMembers.Select(x => (UserDTO)x.User);
+            }
+            catch (Exception ex)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

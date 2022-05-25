@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Solicity.Api.Models.Auth;
+using Solicity.Domain.DTOs.Auth;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Services;
 
@@ -27,13 +27,13 @@ namespace Solicity.Api.Controllers
 
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest model)
+        public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var token = await _authService.Login(model.Email, model.Password);
+                    var token = await _authService.Login(model);
                     return Ok(token);
                 }
                 else
@@ -49,22 +49,13 @@ namespace Solicity.Api.Controllers
 
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var newUser = new User
-                    {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Email = model.Email,
-                        Password = model.Password,
-                    };
-
-                    var user = await _authService.Register(newUser);
-
+                    var user = await _authService.Register(model);
                     return Ok(user);
                 }
                 else

@@ -10,6 +10,8 @@ namespace Infra.Persistence.EFCore
         public DbSet<User> Users { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamMember> teamMembers { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<RequestType> requestTypes { get; set; }
 
         public PersistenceContext(IConfiguration configuration)
         {

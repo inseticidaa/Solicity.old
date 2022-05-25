@@ -1,6 +1,4 @@
-﻿using Solicity.Domain.Entities;
-
-namespace Solicity.Domain.DTOs
+﻿namespace Solicity.Domain.DTOs.User
 {
     public class UserDTO
     {
@@ -13,7 +11,7 @@ namespace Solicity.Domain.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime UdpatedAt { get; set; }
 
-        public static implicit operator UserDTO(User user)
+        public static implicit operator UserDTO(Entities.User user)
         {
             return new UserDTO
             {

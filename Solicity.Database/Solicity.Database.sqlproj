@@ -56,14 +56,20 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Table" />
+    <Folder Include="Tables" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Table\TB_USERS.sql" />
-    <Build Include="Table\TB_TEAMS.sql" />
-    <Build Include="Table\TB_TEAMS_MEMBERS.sql" />
+    <Build Include="Tables\TB_USERS.sql" />
+    <Build Include="Tables\TB_TEAMS.sql" />
+    <Build Include="Tables\TB_TEAMS_MEMBERS.sql" />
+    <Build Include="Tables\TB_REQUESTS.sql" />
+    <Build Include="Tables\TB_REQUESTS_TYPES.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Solicity.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\PostDeployment.sql" />
   </ItemGroup>
 </Project>

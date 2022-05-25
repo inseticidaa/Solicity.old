@@ -5,22 +5,14 @@ namespace Solicity.Domain.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        Task<T?> GetById(int id);
+        Task<T?> GetByIdAsync(int id);
 
-        Task<T?> FirstOrDefault(Expression<Func<T, bool>> predicate);
+        Task<int> AddAsync(T entity);
 
-        Task<int> Add(T entity);
+        Task UpdateAsync(T entity);
 
-        Task Update(T entity);
+        Task RemoveAsync(T entity);
 
-        Task Remove(T entity);
-
-        Task<IEnumerable<T>> GetAll();
-
-        Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate);
-
-        Task<int> CountAll();
-
-        Task<int> CountWhere(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAllAsync(int page, int pageSize);
     }
 }

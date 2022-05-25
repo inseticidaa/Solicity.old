@@ -1,12 +1,13 @@
 ﻿using Solicity.Domain.DTOs;
+using Solicity.Domain.DTOs.Auth;
 using Solicity.Domain.Entities;
 
 namespace Solicity.Domain.Services
 {
     public interface IAuthService
     {
-        Task<TokenDTO> Login(string email, string password);
+        Task<TokenDTO> Login(LoginDTO loginDTO);
 
-        Task<TokenDTO> Register(User newUser);
+        Task<TokenDTO> Register(RegisterDTO registerDTO);
     }
 }

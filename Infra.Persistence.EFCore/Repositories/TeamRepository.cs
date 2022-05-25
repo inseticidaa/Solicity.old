@@ -43,7 +43,10 @@ namespace Infra.Persistence.EFCore.Repositories
 
         public async Task<Team?> GetById(int id)
         {
-            return await Context.Teams.Include(x => x.Members).FirstOrDefaultAsync();
+            return await Context.Teams
+                .Include(x => x.Members)
+                .Include(x => x.Requests)
+                .Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<Team?> GetByName(string name)

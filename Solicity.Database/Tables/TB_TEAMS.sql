@@ -4,7 +4,7 @@
     [Name] VARCHAR(50) NOT NULL UNIQUE,
     [Description] VARCHAR(256) NULL, 
     [Enabled] BIT NOT NULL DEFAULT 1,
-    [Visibility] INT NOT NULL,
+    [Public] BIT NOT NULL DEFAULT 1,
     [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(), 
     [UdpatedAt] DATETIME NOT NULL DEFAULT GETDATE(), 
     [DeletedAt] DATETIME NULL,
