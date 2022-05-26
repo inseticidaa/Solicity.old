@@ -34,7 +34,7 @@ namespace Solicity.Application.Services
                 if (user == null) throw new Exception("This user does not exist");
 
                 var IsMember = await _unitOfWork.TeamMembers.IsMember(team.Id, addMemberDTO.UserId);
-                if (IsMember != null) throw new Exception("This user is already a team member");
+                if (IsMember) throw new Exception("This user is already a team member");
 
                 var newTeamMember = new TeamMember
                 {
@@ -166,7 +166,7 @@ namespace Solicity.Application.Services
                 if (_team == null) throw new Exception("This Team doesn't exist");
 
                 var isMember = await _unitOfWork.TeamMembers.IsMember(_team.Id, userId);
-                if (isMember) throw new Exception("You are not a member of the group");
+                if (!isMember) throw new Exception("You are not a member of the group");
 
                 _team.Name = team.Name;
                 _team.Description = team.Description;
@@ -232,6 +232,13 @@ namespace Solicity.Application.Services
             {
                 var team = await _unitOfWork.Teams.GetByIdAsync(teamId);
                 if (team == null) throw new Exception("This Team doesn't exist");
+
+                if (!team.Public)
+                {
+                    var isMember = await _unitOfWork.TeamMembers.IsMember(team.Id, userId);
+                    if (!isMember) throw new Exception("You are not a member of the group");
+
+                }
 
                 var teamMembers = await _unitOfWork.TeamMembers.GetMembersAsync(teamId);
 
