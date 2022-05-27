@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Infra.Logger.CLI\Infra.Logger.CLI.csproj" />
     <ProjectReference Include="..\Infra.Persistence.Dapper\Infra.Persistence.Dapper.csproj" />
     <ProjectReference Include="..\Solicity.Application\Solicity.Application.csproj" />
     <ProjectReference Include="..\Solicity.Domain\Solicity.Domain.csproj" />

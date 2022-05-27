@@ -12,7 +12,12 @@ namespace Solicity.Domain.Validators
     {
         public RequestValidator()
         {
-            RuleFor(c => c.Description).NotEmpty().MaximumLength(256);  
+            RuleFor(c => c.Description).NotEmpty().NotNull();
+            RuleFor(x => x.AuthorId).NotEmpty().NotNull();
+            RuleFor(x => x.Title).NotEmpty().MaximumLength(50).NotNull();
+            RuleFor(x => x.RequestTypeId).NotEmpty().NotNull();
+            RuleFor(x => x.TeamId).NotEmpty().NotNull();
+            RuleFor(x => x).NotEmpty().NotNull();
         }
     }
 }

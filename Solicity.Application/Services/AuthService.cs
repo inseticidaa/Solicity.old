@@ -13,20 +13,17 @@ namespace Solicity.Application.Services
 {
     public class AuthService : IAuthService
     {
-        #region [Props]
 
-        private IUnitOfWork _unitOfWork;
         private IConfiguration _configuration;
+        private IUnitOfWork _unitOfWork;
+        private ILogger _logger;
 
-        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration)
+        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger logger)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
+            _logger = logger;
         }
-
-        #endregion [Props]
-
-        #region [Methods]
 
         public TokenDTO GenerateToken(User user)
         {
@@ -60,7 +57,7 @@ namespace Solicity.Application.Services
 
                 if (user == null) throw new Exception("User not exists");
 
-                if (!user.CheckPassword(loginDTO.Password)) throw new Exception("Unauthorized");
+                if (!user.CheckPassword(loginDTO.Password)) throw new UnauthorizedAccessException();
 
                 return GenerateToken(user);
             }
@@ -100,6 +97,5 @@ namespace Solicity.Application.Services
             }
         }
 
-        #endregion [Methods]
     }
 }

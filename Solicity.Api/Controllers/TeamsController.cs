@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Solicity.Domain.DTOs;
 using Solicity.Domain.DTOs.Team;
-using Solicity.Domain.Entities;
 using Solicity.Domain.Services;
 
 namespace Solicity.Api.Controllers
@@ -17,17 +17,37 @@ namespace Solicity.Api.Controllers
             _teamService = teamService;
         }
 
-        [HttpPost]
+        #region [Team]
+
+        [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> Post([FromBody] NewTeamDTO model)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-                var teamId = await _teamService.Create(model, requesterId);
+                await _teamService.Delete(id, requesterId);
 
-                return CreatedAtAction(nameof(GetById), new {id = teamId}, new { teamId = teamId });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+
+                var team = await _teamService.GetAllAsync(page, pageSize, requesterId);
+
+                return Ok(team);
             }
             catch (Exception ex)
             {
@@ -53,17 +73,17 @@ namespace Solicity.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> Post([FromBody] NewTeamDTO model)
         {
             try
             {
                 var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-                var team = await _teamService.GetAllAsync(page, pageSize, requesterId);
+                var teamId = await _teamService.Create(model, requesterId);
 
-                return Ok(team);
+                return CreatedAtAction(nameof(GetById), new { id = teamId }, new { teamId = teamId });
             }
             catch (Exception ex)
             {
@@ -89,15 +109,19 @@ namespace Solicity.Api.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        #endregion [Team]
+
+        #region [Members]
+
+        [HttpPost("{teamId}/Members/{userID}")]
         [Authorize]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> AddMember([FromRoute] int teamId, [FromRoute] int userId)
         {
             try
             {
                 var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-                await _teamService.Delete(id, requesterId);
+                await _teamService.AddMember(new TeamMemberDTO { TeamId = teamId, UserId = userId }, requesterId);
 
                 return Ok();
             }
@@ -116,7 +140,7 @@ namespace Solicity.Api.Controllers
                 var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
                 var members = await _teamService.GetMembers(teamId, requesterId);
-                
+
                 return Ok(members);
             }
             catch (Exception ex)
@@ -124,5 +148,51 @@ namespace Solicity.Api.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+
+        [HttpDelete("{teamId}/Members/{userID}")]
+        [Authorize]
+        public async Task<IActionResult> RemoveMember([FromRoute] int teamId, [FromRoute] int userId)
+        {
+            try
+            {
+                var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+
+                await _teamService.RemoveMember(new TeamMemberDTO { TeamId = teamId, UserId = userId }, requesterId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        #endregion [Members]
+
+        #region [Requests]
+
+        [HttpPost("{teamId}/Requests/")]
+        [Authorize]
+        public async Task<IActionResult> AddRequest([FromRoute] int teamId, [FromBody] NewRequestDTO newRequest)
+        {
+            try
+            {
+                var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+
+                await _teamService.AddRequest(newRequest, teamId, requesterId);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpGet("{teamId}/Requests")]
+        public void GetRequest([FromRoute] int teamId)
+        {
+        }
+
+        #endregion [Requests]
     }
 }

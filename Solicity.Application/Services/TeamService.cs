@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
+using Solicity.Domain.DTOs;
 using Solicity.Domain.DTOs.Team;
 using Solicity.Domain.DTOs.User;
 using Solicity.Domain.Entities;
@@ -20,7 +21,7 @@ namespace Solicity.Application.Services
             _configuration = configuration;
         }
 
-        public async Task AddMember(AddMemberDTO addMemberDTO, int userId)
+        public async Task AddMember(TeamMemberDTO addMemberDTO, int userId)
         {
             try
             {
@@ -50,10 +51,34 @@ namespace Solicity.Application.Services
             }
         }
 
-        public async Task<int> AddRequest(Request request)
+        public async Task<int> AddRequest(NewRequestDTO newRequest, int teamId, int userId)
         {
             try
             {
+                var user = await _unitOfWork.Users.GetByIdAsync(userId);
+                if (user == null) throw new Exception("This User does not exist");
+                if (!user.Enabled) throw new Exception("This User not enabled");
+
+                var team = await _unitOfWork.Teams.GetByIdAsync(teamId);
+                if (team == null) throw new Exception("This Team doesn't exist");
+                if (!team.Enabled) throw new Exception("This Team not enabled");
+
+                if (!team.Public)
+                {
+                    var IsMember = await _unitOfWork.TeamMembers.IsMember(team.Id, userId);
+                    if (!IsMember) throw new UnauthorizedAccessException("You are not a member of the group");
+                }
+
+                var request = new Request {
+                    TeamId = team.Id,
+                    AuthorId = user.Id,
+                    RequestTypeId = newRequest.RequestTypeId,
+                    Title = newRequest.Title,
+                    Description= newRequest.Description,
+                    CreatedAt = DateTime.Now,
+                    UdpatedAt = DateTime.Now,
+                };
+
                 var validator = new RequestValidator();
                 await validator.ValidateAndThrowAsync(request);
 
@@ -61,24 +86,7 @@ namespace Solicity.Application.Services
                 if (requestType == null) throw new Exception("This Request Type doesn't exist");
                 if (!requestType.Enabled) throw new Exception("This Request Type not enabled");
 
-                var team = await _unitOfWork.Teams.GetByIdAsync(request.TeamId);
-                if (team == null) throw new Exception("This Team doesn't exist");
-                if (!team.Enabled) throw new Exception("This Team not enabled");
-
-                var user = await _unitOfWork.Users.GetByIdAsync(request.AuthorId);
-                if (user == null) throw new Exception("This User does not exist");
-                if (!user.Enabled) throw new Exception("This User not enabled");
-
-                var newRequest = new Request
-                {
-                    AuthorId = request.AuthorId,
-                    TeamId = request.TeamId,
-                    RequestType = requestType,
-                    Title = request.Title,
-                    Description = request.Description,
-                };
-
-                var request_id = await _unitOfWork.Requests.AddAsync(newRequest);
+                var request_id = await _unitOfWork.Requests.AddAsync(request);
 
                 return request_id;
             }
@@ -183,6 +191,11 @@ namespace Solicity.Application.Services
             }
         }
 
+        public Task EditRequest(EditRequestDTO editRequest, int userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<TeamDTO> Find(int teamId, int userId)
         {
             try
@@ -237,7 +250,6 @@ namespace Solicity.Application.Services
                 {
                     var isMember = await _unitOfWork.TeamMembers.IsMember(team.Id, userId);
                     if (!isMember) throw new Exception("You are not a member of the group");
-
                 }
 
                 var teamMembers = await _unitOfWork.TeamMembers.GetMembersAsync(teamId);
@@ -248,6 +260,11 @@ namespace Solicity.Application.Services
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public Task RemoveMember(TeamMemberDTO addMemberDTO, int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

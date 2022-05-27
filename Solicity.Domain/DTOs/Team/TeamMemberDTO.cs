@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Solicity.Domain.DTOs.Team
 {
-    public class AddMemberDTO
+    public class TeamMemberDTO
     {
         public int TeamId { get; set; }
         public int UserId { get; set; }

@@ -12,7 +12,6 @@ namespace Solicity.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        #region Props
 
         private IAuthService _authService;
 
@@ -20,10 +19,6 @@ namespace Solicity.Api.Controllers
         {
             _authService = authService;
         }
-
-        #endregion Props
-
-        #region Methods
 
         [HttpPost("Login")]
         [AllowAnonymous]
@@ -69,6 +64,5 @@ namespace Solicity.Api.Controllers
             }
         }
 
-        #endregion Methods
     }
 }
