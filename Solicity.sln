@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.Persistence.Dapper", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.Logger.CLI", "Infra.Logger.CLI\Infra.Logger.CLI.csproj", "{E6EC570E-DFB6-4E58-A8A6-3DADDF19CA4E}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Solicity.Web", "Solicity.Web\Solicity.Web.esproj", "{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,12 @@ Global
 		{E6EC570E-DFB6-4E58-A8A6-3DADDF19CA4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6EC570E-DFB6-4E58-A8A6-3DADDF19CA4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6EC570E-DFB6-4E58-A8A6-3DADDF19CA4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +75,7 @@ Global
 		{4AC657B8-C596-4646-B5A4-8CFA6CAACF59} = {B62FE665-654D-45C8-BEC2-BCCF88B5DB35}
 		{BDDB5B5D-6147-46B2-B18C-CBBB755C40E5} = {44675851-8D45-49F7-845A-0360D385580E}
 		{E6EC570E-DFB6-4E58-A8A6-3DADDF19CA4E} = {44675851-8D45-49F7-845A-0360D385580E}
+		{0D3F1F0D-0FEA-4F5A-93F7-C00183B20F4E} = {B62FE665-654D-45C8-BEC2-BCCF88B5DB35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E97DE906-4508-4DC0-A3D7-12FC9FBD6F9E}

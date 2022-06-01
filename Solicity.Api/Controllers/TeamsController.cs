@@ -189,7 +189,7 @@ namespace Solicity.Api.Controllers
         }
 
         [HttpGet("{teamId}/Requests")]
-        public void GetRequest([FromRoute] int teamId)
+        public void GetRequests([FromRoute] int teamId)
         {
         }
 

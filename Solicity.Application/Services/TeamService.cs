@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Solicity.Domain.DTOs;
 using Solicity.Domain.DTOs.Team;
-using Solicity.Domain.DTOs.User;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
@@ -49,6 +48,11 @@ namespace Solicity.Application.Services
             {
                 throw;
             }
+        }
+
+        public Task<int> AddProject(NewProjectDTO newProject, int teamId, int userId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<int> AddRequest(NewRequestDTO newRequest, int teamId, int userId)
@@ -189,6 +193,11 @@ namespace Solicity.Application.Services
             {
                 throw;
             }
+        }
+
+        public Task EditProject(EditProjectDTO editProject, int projectId, int userId)
+        {
+            throw new NotImplementedException();
         }
 
         public Task EditRequest(EditRequestDTO editRequest, int userId)

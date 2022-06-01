@@ -65,6 +65,7 @@
     <Build Include="Tables\TB_TEAMS_MEMBERS.sql" />
     <Build Include="Tables\TB_REQUESTS.sql" />
     <Build Include="Tables\TB_REQUESTS_TYPES.sql" />
+    <Build Include="Tables\TB_PROJECTS.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Solicity.Database.refactorlog" />

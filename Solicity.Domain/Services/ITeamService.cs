@@ -1,6 +1,4 @@
 ﻿using Solicity.Domain.DTOs;
-using Solicity.Domain.DTOs.Team;
-using Solicity.Domain.DTOs.User;
 
 namespace Solicity.Domain.Services
 {
@@ -80,5 +78,8 @@ namespace Solicity.Domain.Services
         /// <param name="userId">Usuario que esta criando a solicitacao</param>
         /// <returns></returns>
         Task<int> AddRequest(NewRequestDTO newRequest, int teamId, int userId);
+
+        Task<int> AddProject(NewProjectDTO newProject, int teamId, int userId);
+        Task EditProject(EditProjectDTO editProject, int projectId, int userId);
     }
 }

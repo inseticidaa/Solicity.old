@@ -1,4 +1,4 @@
-﻿using Solicity.Domain.DTOs.User;
+﻿using Solicity.Domain.DTOs;
 using Solicity.Domain.Entities;
 
 namespace Solicity.Domain.Services

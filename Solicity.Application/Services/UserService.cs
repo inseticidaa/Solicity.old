@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Solicity.Domain.DTOs.User;
+using Solicity.Domain.DTOs;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
