@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Solicity.Domain.DTOs;
-using Solicity.Domain.DTOs.Team;
 using Solicity.Domain.Entities;
 using Solicity.Domain.Ports;
 using Solicity.Domain.Services;
@@ -73,12 +72,13 @@ namespace Solicity.Application.Services
                     if (!IsMember) throw new UnauthorizedAccessException("You are not a member of the group");
                 }
 
-                var request = new Request {
+                var request = new Request
+                {
                     TeamId = team.Id,
                     AuthorId = user.Id,
                     RequestTypeId = newRequest.RequestTypeId,
                     Title = newRequest.Title,
-                    Description= newRequest.Description,
+                    Description = newRequest.Description,
                     CreatedAt = DateTime.Now,
                     UdpatedAt = DateTime.Now,
                 };
@@ -100,20 +100,20 @@ namespace Solicity.Application.Services
             }
         }
 
-        public async Task<int> Create(NewTeamDTO newTeamDTO, int userId)
+        public async Task<int> CreateTeam(NewTeamDTO newTeamDTO, int userId)
         {
             try
             {
                 var user = await _unitOfWork.Users.GetByIdAsync(userId);
 
-                if (user is null) throw new Exception("This User does not exist");
-                if (!user.Enabled) throw new Exception("This User not enabled");
-                if (!user.IsAdmin) throw new Exception("This User Unauthorized");
+                if (user is null) throw new Exception("Usuário não existe.");
+                if (!user.Enabled) throw new Exception("Usuário não está ativo.");
+                if (!user.IsAdmin) throw new UnauthorizedAccessException();
 
-                var team = await _unitOfWork.Teams.GetByName(newTeamDTO.Name);
-                if (team is not null) throw new Exception("A team with the same name has already been created");
+                var _team = await _unitOfWork.Teams.GetByName(newTeamDTO.Name);
+                if (_team is not null) throw new Exception("O nome não está disponível para registro");
 
-                var _team = new Team
+                var team = new Team
                 {
                     Name = newTeamDTO.Name,
                     Description = newTeamDTO.Description,
@@ -124,21 +124,34 @@ namespace Solicity.Application.Services
                 };
 
                 var validador = new TeamValidator();
-                await validador.ValidateAndThrowAsync(_team);
+                await validador.ValidateAndThrowAsync(team);
 
-                var teamId = await _unitOfWork.Teams.AddAsync(_team);
-
-                var tm = new TeamMember
+                try
                 {
-                    TeamId = teamId,
-                    UserId = user.Id,
-                    CreatedAt = DateTime.Now,
-                    UdpatedAt = DateTime.Now,
-                };
+                    _unitOfWork.BeginTransaction();
 
-                await _unitOfWork.TeamMembers.AddAsync(tm);
+                    var teamId = await _unitOfWork.Teams.AddAsync(team);
 
-                return teamId;
+                    var teamMember = new TeamMember
+                    {
+                        TeamId = teamId,
+                        UserId = user.Id,
+                        CreatedAt = DateTime.Now,
+                        UdpatedAt = DateTime.Now,
+                    };
+
+                    await _unitOfWork.TeamMembers.AddAsync(teamMember);
+
+                    _unitOfWork.Commit();
+
+                    return teamId;
+                }
+                catch (Exception)
+                {
+                    _unitOfWork.Rollback();
+                    throw;
+                }
+
             }
             catch (Exception)
             {

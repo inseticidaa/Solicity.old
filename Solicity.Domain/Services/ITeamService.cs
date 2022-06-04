@@ -19,7 +19,7 @@ namespace Solicity.Domain.Services
         /// <param name="newTeamDTO">Formulario de criacao do novo time</param>
         /// <param name="userId">Usuario que esta criando o time</param>
         /// <returns>Id do time que foi criado</returns>
-        Task<int> Create(NewTeamDTO newTeamDTO, int userId);
+        Task<int> CreateTeam(NewTeamDTO newTeamDTO, int userId);
 
         /// <summary>
         /// Edita as informacos de uma determinada equipe

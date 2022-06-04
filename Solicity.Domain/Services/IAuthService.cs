@@ -1,7 +1,4 @@
 ﻿using Solicity.Domain.DTOs;
-using Solicity.Domain.DTOs.Auth;
-using Solicity.Domain.Entities;
-
 namespace Solicity.Domain.Services
 {
     public interface IAuthService
@@ -9,9 +6,9 @@ namespace Solicity.Domain.Services
         /// <summary>
         /// Raliza a autenticacao de um usuario previamente cadastrado na plataforma
         /// </summary>
-        /// <param name="loginDTO">Formulario de Login da plataforma</param>
+        /// <param name="authenticateDTO">Formulario de Login da plataforma</param>
         /// <returns>DTO contendo um Token de Autorizacao</returns>
-        Task<TokenDTO> Login(LoginDTO loginDTO);
+        Task<TokenDTO> Authenticate(AuthenticateDTO authenticateDTO);
 
         /// <summary>
         /// Registrar um novo usuario na plataforma Solicity

@@ -13,6 +13,7 @@ import {
   Toast,
 } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import Layout from "../../components/Layout";
 
 export default class Request extends Component {
 
@@ -24,7 +25,7 @@ export default class Request extends Component {
         id: 3141,
         title: "Exemplo de titulo de requisicao para squads"
       },
-      
+
       comment_input: ""
     }
   }
@@ -109,7 +110,7 @@ export default class Request extends Component {
                   aria-label="With textarea"
                   placeholder="Escreva um comentario..."
                   value={this.state.comment_input}
-                  onChange={(e) => this.setState({comment_input: e.target.value})}
+                  onChange={(e) => this.setState({ comment_input: e.target.value })}
                 />
                 <div className="d-flex flex-row-reverse mt-3">
                   <Button variant="success" size="sm" disabled={!this.state.comment_input != ""}>

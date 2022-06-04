@@ -1,27 +1,30 @@
-import Request from "./pages/Request";
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/global.css';
 
-import { AuthProvider, RequireAuth } from "./components/AuthProvider";
 import { Route, Routes } from "react-router-dom";
-import Layout from "./components/Layout";
-import Login from "./pages/Login";
+import { ProtectedRoute } from './components/ProtectedRoute';
+
+
+// Pages
+import LoginPage from './pages/Login';
+import { AuthProvider } from './components/AuthProvider';
+import TeamPage from './pages/Team';
 
 function App() {
   return (
     <AuthProvider>
-      <Routes element={<Layout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element= {
-              <RequireAuth>
-                <div>asdoaskdo</div>
-              </RequireAuth>
-            }
-          />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/teams/:id" element={<ProtectedRoute><TeamPage /></ProtectedRoute>} />
       </Routes>
     </AuthProvider>
   );
 }
+
+// Home.js file
+const Home = () => {
+  return <div className="element">This is Home page</div>;
+};
 
 export default App;

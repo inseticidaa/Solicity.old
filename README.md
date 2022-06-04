@@ -1,15 +1,8 @@
 # Solicity
 
-## MVP1 - Usuarios, Times & Solicitacoes
-
-Usuarios:
-- [X] Registro de Usuarios
-- [x] Autenticacao de Usuario
+## MVP1 - Users, Teams and Requests
 
 Times:
-- [x] Criacao de Time
-- [x] Deletar time
-- [x] Editar informacoes do time
 - [x] Adicionar Membro
 - [x] Remover Membro
 

@@ -24,23 +24,6 @@ namespace Solicity.Application.Services
 
         #region [Methods]
 
-        public async Task<IEnumerable<UserDTO>> GetAllAsync(int page, int pageSize, int userId)
-        {
-            try
-            {
-                var user = await _unitOfWork.Users.GetByIdAsync(userId);
-                if (user == null) throw new Exception("This user does not exist");
-                if (!user.IsAdmin) throw new UnauthorizedAccessException();
-
-                var users = await _unitOfWork.Users.GetAllAsync(page, pageSize);
-                return users.Select(x => (UserDTO)x);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         #endregion [Methods]
     }
 }

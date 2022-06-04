@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Solicity.Domain.DTOs;
-using Solicity.Domain.DTOs.Team;
+using Solicity.Domain.DTOs;
 using Solicity.Domain.Services;
 
 namespace Solicity.Api.Controllers
@@ -75,13 +75,13 @@ namespace Solicity.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Post([FromBody] NewTeamDTO model)
+        public async Task<IActionResult> CreateTeam([FromBody] NewTeamDTO model)
         {
             try
             {
-                var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+                var requesterId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Id")!.Value);
 
-                var teamId = await _teamService.Create(model, requesterId);
+                var teamId = await _teamService.CreateTeam(model, requesterId);
 
                 return CreatedAtAction(nameof(GetById), new { id = teamId }, new { teamId = teamId });
             }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Solicity.Domain.Entities
+﻿namespace Solicity.Domain.Entities
 {
     public class TeamMember : BaseEntity
     {
