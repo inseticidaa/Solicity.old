@@ -1,6 +1,6 @@
-import React, { Component, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Card, Row, Col, Container, Spinner, Alert } from 'react-bootstrap';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/AuthProvider";
 
 export default function LoginPage() {
@@ -12,7 +12,7 @@ export default function LoginPage() {
 
     let [loading, setLoading] = useState(false);
     let [alert, setAlert] = useState(null)
-    let { user, signin, signout } = useAuth();
+    let { user, signin } = useAuth();
     const navigate = useNavigate();
 
     let handleSubmit = () => {
@@ -43,13 +43,13 @@ export default function LoginPage() {
 
         signin(email, password, (err) => {
             if (err) {
-                setAlert({ message: JSON.stringify(err), type: "danger" });
+                setAlert(err);
                 setLoading(false);
                 return;
             }
 
             setAlert({ message: `Autorizado!`, type: "success" });
-            navigate('/teams/123')
+            navigate('/');
         });
     };
 
@@ -59,11 +59,12 @@ export default function LoginPage() {
         }
     }
 
-    console.log(user);
+    useEffect(() => {
+        if (user) {
+            navigate('/');
+        }
+    })
 
-    if (user) {
-        navigate('/');
-    }
 
     return (
         <Container className="vh-100 d-flex align-items-sm-center">
@@ -89,7 +90,7 @@ export default function LoginPage() {
                                         isInvalid={!emailIsValid}
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        onKeyDown={handleKeyDown}/>
+                                        onKeyDown={handleKeyDown} />
                                     <Form.Text className="text-muted">
                                         Insira um e-mail de uma conta cadastrada.
                                     </Form.Text>
@@ -101,11 +102,11 @@ export default function LoginPage() {
                                         placeholder="Insira sua senha"
                                         isInvalid={!passwordIsValid}
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)} 
+                                        onChange={(e) => setPassword(e.target.value)}
                                         onKeyDown={handleKeyDown} />
                                 </Form.Group>
                                 <Form.Group className="mt-3">
-                                    <Form.Check type="checkbox" label="Continuar logado" />
+                                    <Form.Check type="checkbox" label="Continuar logado (nao esta funcionando)" />
                                 </Form.Group>
                                 <Button variant="success" className="mt-3" onClick={handleSubmit} disabled={loading}>
                                     {

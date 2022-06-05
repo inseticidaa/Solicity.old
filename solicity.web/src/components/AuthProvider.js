@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 let AuthContext = React.createContext(null);
@@ -7,6 +7,7 @@ export function AuthProvider({ children }) {
   let [user, setUser] = React.useState(null);
 
   let signin = (email, password, callback) => {
+
     fetch('https://localhost:7264/api/Auth/Authenticate',
       {
         method: "POST",
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
             case 400:
             case 401:
               console.log(body)
-              callback({ message: body.message, type: "warning" })
+              callback({ message: body.message, type: "danger" })
               break;
             case 200:
               setUser(body);

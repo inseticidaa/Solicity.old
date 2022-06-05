@@ -36,7 +36,7 @@ namespace Infra.Persistence.Dapper.Repositories
                 ,@UdpatedAt);
             SELECT SCOPE_IDENTITY();";
 
-            var teamId = await _Session.Connection.QueryFirstOrDefaultAsync<int>(query, entity);
+            var teamId = await _Session.Connection.QueryFirstOrDefaultAsync<int>(query, entity, _Session.Transaction);
             return teamId;
         }
 
@@ -57,6 +57,7 @@ namespace Infra.Persistence.Dapper.Repositories
                     Offset = (page - 1) * pageSize,
                     PageSize = pageSize
                 }
+                , _Session.Transaction
             );
 
             return result;
@@ -87,6 +88,7 @@ namespace Infra.Persistence.Dapper.Repositories
                     PageSize = pageSize,
                     UserId = userId
                 }
+                , _Session.Transaction
             );
 
             return result;
@@ -95,21 +97,21 @@ namespace Infra.Persistence.Dapper.Repositories
         public async Task<Team?> GetByIdAsync(int id)
         {
             var query = @"SELECT * FROM TB_TEAMS WHERE Id = @Id AND DeletedAt IS NULL";
-            var result = await _Session.Connection.QueryFirstOrDefaultAsync<Team>(query, new { Id = id });
+            var result = await _Session.Connection.QueryFirstOrDefaultAsync<Team>(query, new { Id = id }, _Session.Transaction);
             return result;
         }
 
         public async Task<Team?> GetByName(string name)
         {
             var query = @"SELECT * FROM TB_TEAMS WHERE Name = @Name AND DeletedAt IS NULL";
-            var result = await _Session.Connection.QueryFirstOrDefaultAsync<Team>(query, new { Name = name });
+            var result = await _Session.Connection.QueryFirstOrDefaultAsync<Team>(query, new { Name = name }, _Session.Transaction);
             return result;
         }
 
         public async Task RemoveAsync(Team entity)
         {
             var query = @"UPDATE TB_TEAMS SET DeletedAt = GETDATE() WHERE Id = @Id AND DeletedAt IS NULL;";
-            await _Session.Connection.ExecuteAsync(query, entity);
+            await _Session.Connection.ExecuteAsync(query, entity, _Session.Transaction);
         }
 
         public async Task UpdateAsync(Team entity)
@@ -124,7 +126,7 @@ namespace Infra.Persistence.Dapper.Repositories
                   ,[UdpatedAt] = @UdpatedAt
              WHERE Id = @Id";
 
-            await _Session.Connection.ExecuteAsync(query, entity);
+            await _Session.Connection.ExecuteAsync(query, entity, _Session.Transaction);
         }
     }
 }

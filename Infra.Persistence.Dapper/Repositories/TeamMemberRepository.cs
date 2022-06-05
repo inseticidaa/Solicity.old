@@ -28,7 +28,7 @@ namespace Infra.Persistence.Dapper.Repositories
                 ,@UdpatedAt);
             SELECT SCOPE_IDENTITY();";
 
-            var teamMemberId = await _Session.Connection.QueryFirstOrDefaultAsync<int>(query, entity);
+            var teamMemberId = await _Session.Connection.QueryFirstOrDefaultAsync<int>(query, entity, _Session.Transaction);
             return teamMemberId;
         }
 
@@ -51,6 +51,7 @@ namespace Infra.Persistence.Dapper.Repositories
                     Offset = (page - 1) * pageSize,
                     PageSize = pageSize
                 }
+                , _Session.Transaction
             );
 
             return result;
@@ -63,7 +64,7 @@ namespace Infra.Persistence.Dapper.Repositories
             LEFT JOIN TB_USERS u ON u.Id = tm.UserId
             WHERE tm.Id = @Id AND (tm.DeletedAt IS NULL AND u.DeletedAt IS NULL);";
 
-            var result = await _Session.Connection.QueryAsync<TeamMember, User, TeamMember>(query, (tm, user) => { tm.User = user; return tm; }, new { Id = id });
+            var result = await _Session.Connection.QueryAsync<TeamMember, User, TeamMember>(query, (tm, user) => { tm.User = user; return tm; }, new { Id = id }, _Session.Transaction);
 
             var teamMember = result.ToList().FirstOrDefault();
 
@@ -77,7 +78,7 @@ namespace Infra.Persistence.Dapper.Repositories
             LEFT JOIN TB_USERS u ON u.Id = tm.UserId
             WHERE tm.TeamId = @TeamId AND (tm.DeletedAt IS NULL AND u.DeletedAt IS NULL);";
 
-            var result = await _Session.Connection.QueryAsync<TeamMember, User, TeamMember>(query, (tm, user) => { tm.User = user; return tm; }, new { TeamId = teamId });
+            var result = await _Session.Connection.QueryAsync<TeamMember, User, TeamMember>(query, (tm, user) => { tm.User = user; return tm; }, new { TeamId = teamId }, _Session.Transaction);
 
             return result;
         }
@@ -91,7 +92,7 @@ namespace Infra.Persistence.Dapper.Repositories
                 END
             AS BIT)";
 
-            var result = await _Session.Connection.QueryFirstOrDefaultAsync<bool>(query, new { TeamId = teamId, UserId = userId });
+            var result = await _Session.Connection.QueryFirstOrDefaultAsync<bool>(query, new { TeamId = teamId, UserId = userId }, _Session.Transaction);
 
             return result == null ? false : result;
         }
@@ -99,7 +100,7 @@ namespace Infra.Persistence.Dapper.Repositories
         public async Task RemoveAsync(TeamMember entity)
         {
             var query = @"UPDATE TB_TEAMS_MEMBERS SET DeletedAt = GETDATE() WHERE TeamId = @TeamId AND UserId = @UserId;";
-            await _Session.Connection.ExecuteAsync(query, entity);
+            await _Session.Connection.ExecuteAsync(query, entity, _Session.Transaction);
         }
 
         public Task UpdateAsync(TeamMember entity)

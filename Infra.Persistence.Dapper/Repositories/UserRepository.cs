@@ -36,7 +36,7 @@ namespace Infra.Persistence.Dapper.Repositories
                 ,@UdpatedAt);
             SELECT SCOPE_IDENTITY();";
 
-            var result = _Session.Connection.QueryFirstOrDefaultAsync<int>(query, entity);
+            var result = _Session.Connection.QueryFirstOrDefaultAsync<int>(query, entity, _Session.Transaction);
             return result;
         }
 
@@ -57,6 +57,7 @@ namespace Infra.Persistence.Dapper.Repositories
                     Offset = (page - 1) * pageSize,
                     PageSize = pageSize
                 }
+                , _Session.Transaction
             );
 
             return result;
@@ -65,21 +66,21 @@ namespace Infra.Persistence.Dapper.Repositories
         public async Task<User?> GetByEmailAsync(string email)
         {
             var query = @"SELECT * FROM TB_USERS WHERE Email = @Email AND DeletedAt IS NULL";
-            var result = await _Session.Connection.QueryFirstOrDefaultAsync<User>(query, new { Email = email });
+            var result = await _Session.Connection.QueryFirstOrDefaultAsync<User>(query, new { Email = email }, _Session.Transaction);
             return result;
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
             var query = @"SELECT * FROM TB_USERS WHERE Id = @Id AND DeletedAt IS NULL";
-            var result = await _Session.Connection.QueryFirstOrDefaultAsync<User>(query, new { Id = id });
+            var result = await _Session.Connection.QueryFirstOrDefaultAsync<User>(query, new { Id = id }, _Session.Transaction);
             return result;
         }
 
         public async Task RemoveAsync(User entity)
         {
             var query = @"UPDATE TB_USERS SET DeletedAt = GETDATE() WHERE Id = @Id AND DeletedAt IS NULL;";
-            await _Session.Connection.ExecuteAsync(query, entity);
+            await _Session.Connection.ExecuteAsync(query, entity, _Session.Transaction);
         }
 
         public async Task UpdateAsync(User entity)
@@ -96,7 +97,7 @@ namespace Infra.Persistence.Dapper.Repositories
                   ,[UdpatedAt] = @UdpatedAt
              WHERE Id = @Id";
 
-            await _Session.Connection.ExecuteAsync(query, entity);
+            await _Session.Connection.ExecuteAsync(query, entity, _Session.Transaction);
         }
     }
 }

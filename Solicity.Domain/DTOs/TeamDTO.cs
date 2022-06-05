@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Solicity.Domain.Entities;
 
 namespace Solicity.Domain.DTOs
 {
@@ -15,7 +16,7 @@ namespace Solicity.Domain.DTOs
         public string Name { get; set; }
         public bool Public { get; set; }
 
-        public static implicit operator TeamDTO(Entities.Team team)
+        public static implicit operator TeamDTO(Team team)
         {
             var dto = new TeamDTO
             {
@@ -23,6 +24,7 @@ namespace Solicity.Domain.DTOs
                 Description = team.Description,
                 Enabled = team.Enabled,
                 Public = team.Public,
+                Name = team.Name
             };
 
             return dto;
