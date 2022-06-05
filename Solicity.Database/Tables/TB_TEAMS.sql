@@ -5,6 +5,7 @@
     [Description] VARCHAR(256) NULL, 
     [Enabled] BIT NOT NULL DEFAULT 1,
     [Public] BIT NOT NULL DEFAULT 1,
+    [Image] VARCHAR(MAX) NULL,
     [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(), 
     [UdpatedAt] DATETIME NOT NULL DEFAULT GETDATE(), 
     [DeletedAt] DATETIME NULL,

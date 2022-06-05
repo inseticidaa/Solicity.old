@@ -16,6 +16,8 @@ namespace Solicity.Domain.DTOs
         public string Name { get; set; }
         public bool Public { get; set; }
 
+        public string? Image {  get; set; }
+
         public static implicit operator TeamDTO(Team team)
         {
             var dto = new TeamDTO
@@ -24,6 +26,7 @@ namespace Solicity.Domain.DTOs
                 Description = team.Description,
                 Enabled = team.Enabled,
                 Public = team.Public,
+                Image = team.Image,
                 Name = team.Name
             };
 
@@ -38,10 +41,12 @@ namespace Solicity.Domain.DTOs
         public string Name { get; set; }
         [Required]
         public bool Public { get; set; }
+        public string? Image { get; set; }
     }
 
     public class EditTeamDTO
     {
+        public string? Image { get; set; }
         public string? Description { get; set; }
         public bool Enabled { get; set; } = true;
         public string Name { get; set; }

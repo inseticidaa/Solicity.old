@@ -40,19 +40,20 @@ export default function TeamsPage(props) {
     return (
         <Container>
             <Row>
-                <Col className="p-0 mt-4">
+                <Col className="p-0 mt-4" sm={6}>
                     <h3 className="medium">
-                        Todos os Times
-                        <small className="text-muted"> Publicos E Privados </small>
+                        Times
                     </h3>
+                    <p>Time é um conjunto de pessoas com conhecimentos e habilidades diferentes, que integradas buscam uma ação em comum, para atingir uma meta.</p>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <Row className="mt-2">
                         <Col className="p-0">
-                            <Form.Group>
+                            <Form.Group className="d-flex">
                                 <Form.Control type="text" placeholder="Buscar Time" />
+                                <Button variant="outline-secondary" className="ml-2">Buscar</Button>
                             </Form.Group>
                         </Col>
                         <Col sm={4} className="d-flex flex-row-reverse p-0">
@@ -68,32 +69,16 @@ export default function TeamsPage(props) {
                                     <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
-                            <Dropdown className="mr-2">
-                                <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                                    Ordenar
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item href="#/action-1">Adicionar card</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
                         </Col>
                     </Row>
                 </Col>
             </Row>
 
             <Row className="mt-3 mb-5 d-flex justify-content-md-center">
-
                 {
                     teams.map((data, index) => {
                         return (<Card style={{ width: '18rem' }} className="m-3" key={index} onClick={() => navigate(`/teams/${data.id}`)}>
-                            <Card.Img variant="top" src={`https://picsum.photos/${300 + index}/${200 + index}`} />
-                            <Card.Header>
-                                <span className="badge badge-info">Release 3</span>
-                                <span className="badge badge-success ml-2">Sprint 21</span>
-                            </Card.Header>
+                            <Card.Img variant="top" src={data.image ? data.image : 'https://picsum.photos/300/200'} />
                             <Card.Body>
                                 <Card.Title>{data.name}</Card.Title>
                                 <Card.Text>

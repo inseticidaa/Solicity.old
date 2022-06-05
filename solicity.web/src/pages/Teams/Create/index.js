@@ -1,14 +1,18 @@
 import React, { Component, useState } from "react";
-import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../components/AuthProvider";
+import { useAuth } from "../../../components/AuthProvider";
 
 export default function CreateTeamPage() {
 
     let [teamName, setTeamName] = useState("");
     let [teamDescription, setTeamDescription] = useState("");
     let [isPublic, setIsPublic] = useState(true);
+    let [dataUri, setDataUri] = useState('')
+
+
     let [alert, setAlert] = useState(null);
+    let [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     let { user } = useAuth();
@@ -28,7 +32,8 @@ export default function CreateTeamPage() {
             body: JSON.stringify({
                 description: teamDescription,
                 name: teamName,
-                public: isPublic
+                public: isPublic,
+                image: dataUri
             })
         })
             .then((res, err) => {
@@ -38,21 +43,44 @@ export default function CreateTeamPage() {
                 res.json()
                     .then((body, err) => {
                         if (err) return setAlert({ message: "Internal Server Error: Error on try parse json from request response", type: "danger" });
-                        
+
                         switch (res.status) {
                             case 400:
                             case 401:
-                              console.log(body)
-                              setAlert({ message: body.message, type: "danger" })
-                              break;
+                                console.log(body)
+                                setAlert({ message: body.message, type: "danger" })
+                                break;
                             case 201:
                             case 200:
-                              setAlert({ message: "Time criado", type: "success" })
-                              navigate(`/teams/${body.teamId}`)
-                              break;
-                          };                        
+                                setAlert({ message: "Time criado", type: "success" })
+                                navigate(`/teams/${body.teamId}`)
+                                break;
+                        };
                     })
             });
+    }
+
+
+    const fileToDataUri = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            resolve(event.target.result)
+        };
+        reader.readAsDataURL(file);
+    })
+
+    const onChange = (file) => {
+
+        if (!file) {
+            setDataUri('');
+            return;
+        }
+
+        fileToDataUri(file)
+            .then(dataUri => {
+                setDataUri(dataUri)
+            })
+
     }
 
     return (
@@ -82,10 +110,14 @@ export default function CreateTeamPage() {
                         </Form.Group>
                         <Form.Group className="mt-2">
                             <Form.Label>Descricao</Form.Label>
-                            <Form.Control as="textarea" rows={5} value={teamDescription} onChange={(e) => setTeamDescription(e.target.value)} />
+                            <Form.Control as="textarea" rows={5} value={teamDescription} onChange={(e) => setTeamDescription(e.target.value)} isInvalid={teamDescription.length > 256} />
                             <Form.Text className="text-muted">
-                                Os nomes de times são únicos mas podem ser alterados posteriormente.
+                                Os nomes de times são únicos mas podem ser alterados posteriormente. ({teamDescription.length}/256)
                             </Form.Text>
+                        </Form.Group>
+                        <Form.Group className="mt-3">
+                            <Form.Label>Foto do time</Form.Label>
+                            <input class="form-control p-1" type="file" accept="image/x-png,image/jpeg" onChange={(event) => onChange(event.target.files[0] || null)} />
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Check
@@ -99,10 +131,31 @@ export default function CreateTeamPage() {
                                 Times públicos são visíveis a todos os usuários da plataforma.
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="success" className="mt-3" size="md" onClick={handlerSubmit}>
+                        <Button variant="success" className="mt-3" size="md" onClick={handlerSubmit} disabled={loading}>
+                            {
+                                loading && <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    className="mr-2"
+                                />
+                            }
                             Criar time
                         </Button>
                     </Form>
+                </Col>
+                <Col className="d-flex justify-content-center align-items-center">
+                    <Card style={{ width: '18rem' }} className="m-3">
+                        <Card.Img variant="top" src={dataUri ? dataUri : "https://picsum.photos/300/200"} />
+                        <Card.Body>
+                            <Card.Title>{teamName ? teamName : "Nome do Time"}</Card.Title>
+                            <Card.Text>
+                                {teamDescription ? teamDescription : "Example team description"}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
         </Container>

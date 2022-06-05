@@ -118,6 +118,7 @@ namespace Solicity.Application.Services
                     Name = newTeamDTO.Name,
                     Description = newTeamDTO.Description,
                     Public = newTeamDTO.Public,
+                    Image = newTeamDTO.Image,
                     Enabled = true,
                     CreatedAt = DateTime.Now,
                     UdpatedAt = DateTime.Now,

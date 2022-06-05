@@ -25,6 +25,7 @@ namespace Infra.Persistence.Dapper.Repositories
                 ,[Description]
                 ,[Enabled]
                 ,[Public]
+                ,[Image]
                 ,[CreatedAt]
                 ,[UdpatedAt])
             VALUES
@@ -32,6 +33,7 @@ namespace Infra.Persistence.Dapper.Repositories
                 ,@Description
                 ,@Enabled
                 ,@Public
+                ,@Image
                 ,@CreatedAt
                 ,@UdpatedAt);
             SELECT SCOPE_IDENTITY();";
@@ -122,6 +124,7 @@ namespace Infra.Persistence.Dapper.Repositories
                   ,[Description] = @Description
                   ,[Enabled] = @Enabled
                   ,[Public] = @Public
+                  ,[Image] = @Image
                   ,[CreatedAt] = @CreatedAt
                   ,[UdpatedAt] = @UdpatedAt
              WHERE Id = @Id";

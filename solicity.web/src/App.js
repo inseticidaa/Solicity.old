@@ -6,7 +6,7 @@ import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
 import TeamPage from './pages/Team';
 import TeamsPage from "./pages/Teams";
-import CreateTeamPage from "./pages/TeamCreate";
+import CreateTeamPage from "./pages/Teams/Create";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/global.css';
